@@ -1,17 +1,18 @@
 import React, { Component, MouseEvent, ReactNode, ComponentType } from 'react'
 import { isFunction } from '../utils'
+declare type Constructor<T = {}> = new (...args: any[]) => T
 
-const defaultProps = { props: {} as { [name: string]: any } }
-type DefaultProps = typeof defaultProps
+type DefaultProps<P extends object = object> = { props: P }
+const defaultProps: DefaultProps = { props: {} }
 
 const initialState = { show: false }
 type State = Readonly<typeof initialState>
-type Props = Partial<
+type Props<P extends object = object> = Partial<
   {
     children: RenderCallback | ReactNode
     render: RenderCallback
-    component: ComponentType<ToggleableComponentProps<any>>
-  } & DefaultProps
+    component: ComponentType<ToggleableComponentProps<P>>
+  } & DefaultProps<P>
 >
 type RenderCallback = (args: ToggleableComponentProps) => JSX.Element
 export type ToggleableComponentProps<P extends object = object> = { show: State['show']; toggle: Toggleable['toggle'] } & P
@@ -19,9 +20,14 @@ export type ToggleableComponentProps<P extends object = object> = { show: State[
 const updateShowState = (prevState: State) => ({
   show: !prevState.show
 })
-export default class Toggleable extends Component<Props, State> {
+export default class Toggleable<T extends object = object> extends Component<Props<T>, State> {
+  static ofType<T extends object>() {
+    return Toggleable as Constructor<Toggleable<T>>
+  }
+  static readonly defaultProps: Props = defaultProps
   readonly state: State = initialState
   private toggle = (event: MouseEvent<HTMLElement>) => this.setState(updateShowState)
+
   render() {
     const { component: InjectedComponent, children, render, props } = this.props
     const renderProps = { show: this.state.show, toggle: this.toggle }
@@ -34,6 +40,10 @@ export default class Toggleable extends Component<Props, State> {
       )
     }
 
-    // return isFunction(children) ? children(renderProps) : null
+    if (render) {
+      return render(renderProps)
+    }
+
+    return isFunction(children) ? children(renderProps) : null
   }
 }

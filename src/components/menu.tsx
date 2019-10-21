@@ -2,11 +2,14 @@ import React, { SFC } from 'react'
 import Toggleable from './toggleable'
 import MenuItem from './menu-item'
 
-type Props = { title: string }
-const ToggleableMenuViaInjection: SFC<Props> = ({ title, children }) => (
-  <Toggleable component={MenuItem} props={{ title }}>
+type MenuItemProps = { title: string }
+type ToggleableMenuProps = MenuItemProps
+
+const ToggleableWithTitle = Toggleable.ofType<MenuItemProps>()
+const ToggleableMenuViaInjection: SFC<ToggleableMenuProps> = ({ title, children }) => (
+  <ToggleableWithTitle component={MenuItem} props={{ title }}>
     {children}
-  </Toggleable>
+  </ToggleableWithTitle>
 )
 
 const Menu = () => (

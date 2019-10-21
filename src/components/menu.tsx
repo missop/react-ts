@@ -1,25 +1,19 @@
 import React, { SFC } from 'react'
 import Toggleable from './toggleable'
+import MenuItem from './menu-item'
 
 type Props = { title: string }
-const ToggleableMenu: SFC<Props> = ({ title, children }) => (
-  <Toggleable
-    render={({ show, toggle }) => (
-      <>
-        <div onClick={toggle}>
-          <h1>{title}</h1>
-        </div>
-        {show ? children : null}
-      </>
-    )}
-  />
+const ToggleableMenuViaInjection: SFC<Props> = ({ title, children }) => (
+  <Toggleable component={MenuItem} props={{ title }}>
+    {children}
+  </Toggleable>
 )
 
 const Menu = () => (
   <>
-    <ToggleableMenu title='First Menu'>Some Content</ToggleableMenu>
-    <ToggleableMenu title='Second Menu'>Some content</ToggleableMenu>
-    <ToggleableMenu title='Third Menu'>Other Content</ToggleableMenu>
+    <ToggleableMenuViaInjection title='First Menu'>Some Content</ToggleableMenuViaInjection>
+    <ToggleableMenuViaInjection title='Second Menu'>Some content</ToggleableMenuViaInjection>
+    <ToggleableMenuViaInjection title='Third Menu'>Other Content</ToggleableMenuViaInjection>
   </>
 )
 

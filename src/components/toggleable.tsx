@@ -1,7 +1,7 @@
 import React, { Component, MouseEvent, ReactNode, ComponentType } from 'react'
 import { isFunction } from '../utils'
-declare type Constructor<T = {}> = new (...args: any[]) => T
 
+declare type Constructor<T = {}> = new (...args: any[]) => T
 type DefaultProps<P extends object = object> = { props: P }
 const defaultProps: DefaultProps = { props: {} }
 
